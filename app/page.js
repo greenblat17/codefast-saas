@@ -1,8 +1,16 @@
 import ButtonLogin from "@/components/ButtonLogin";
 import ListItem from "@/components/ListItem";
+import FAQListItem from "@/components/FAQListItem";
 
 export default function Home() {
   const isLoggedIn = true;
+  const faqList = [
+    { question: "How much does it cost?", answer: "It's free!" },
+    { question: "How do I get started?", answer: "It's free!" },
+    { question: "How do I get started?", answer: "It's free!" },
+    { question: "How do I get started?", answer: "It's free!" },
+    { question: "How do I get started?", answer: "It's free!" },
+  ];
 
   return (
     <main>
@@ -11,10 +19,10 @@ export default function Home() {
         <div className="flex justify-between items-center px-8 py-2 mx-auto max-w-3xl">
           <div className="font-bold">CodeFastSaas</div>
           <div className="space-x-4 max-md:hidden">
-            <a href="#" className="link link-hover">
+            <a href="#pricing" className="link link-hover">
               Pricing
             </a>
-            <a href="#" className="link link-hover">
+            <a href="#faq" className="link link-hover">
               FAQ
             </a>
           </div>
@@ -37,7 +45,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section className="bg-base-200">
+      <section id="pricing" className="bg-base-200">
         <div className="py-32 px-8 mx-auto max-w-3xl">
           <p className="text-sm uppercase font-medium text-center text-primary mb-4">
             Pricing
@@ -63,6 +71,24 @@ export default function Home() {
 
             <ButtonLogin isLoggedIn={isLoggedIn} extraStyle="w-full" />
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="bg-base-200">
+        <div className="py-32 px-8 mx-auto max-w-3xl">
+          <p className="text-sm uppercase font-medium text-center text-primary md-4">
+            FAQ
+          </p>
+          <h2 className="text-center text-3xl lg:text-4xl font-extrabold mb-12">
+            Frequently Asked Questions
+          </h2>
+
+          <ul className="max-w-lg mx-auto">
+            {faqList.map((qa) => (
+              <FAQListItem key={qa.question} qa={qa} />
+            ))}
+          </ul>
         </div>
       </section>
     </main>
