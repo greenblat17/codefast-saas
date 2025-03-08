@@ -3,9 +3,9 @@ import ListItem from "@/components/ListItem";
 import FAQListItem from "@/components/FAQListItem";
 import Image from "next/image";
 import productDemo from "@/public/assets/productDemo.jpeg";
+import { auth } from "@/auth";
 
-export default function Home() {
-  const isLoggedIn = true;
+export default async function Home() {
   const faqList = [
     { question: "How much does it cost?", answer: "It's free!" },
     { question: "How do I get started?", answer: "It's free!" },
@@ -13,6 +13,8 @@ export default function Home() {
     { question: "How do I get started?", answer: "It's free!" },
     { question: "How do I get started?", answer: "It's free!" },
   ];
+
+  const session = await auth();
 
   return (
     <main>
@@ -29,7 +31,7 @@ export default function Home() {
             </a>
           </div>
           <div className="">
-            <ButtonLogin isLoggedIn={isLoggedIn} />
+            <ButtonLogin session={session} />
           </div>
         </div>
       </section>
@@ -50,7 +52,7 @@ export default function Home() {
             Create a feedback board in minutes, prioritize features, and build
             products your customers will love.
           </div>
-          <ButtonLogin isLoggedIn={isLoggedIn} />
+          <ButtonLogin session={session} />
         </div>
       </section>
 
@@ -79,7 +81,7 @@ export default function Home() {
               <ListItem>Admin dashboard</ListItem>
             </ul>
 
-            <ButtonLogin isLoggedIn={isLoggedIn} extraStyle="w-full" />
+            <ButtonLogin session={session} extraStyle="w-full" />
           </div>
         </div>
       </section>
