@@ -1,5 +1,7 @@
+import Link from "next/link";
 import ButtonLogout from "@/components/ButtonLogout";
 import FormNewBoard from "@/components/FormNewBoard";
+import CardBoardLink from "@/components/CardBoardLink";
 import { auth } from "@/auth";
 import User from "@/models/User";
 import connectMongo from "@/libs/mongoose";
@@ -32,11 +34,13 @@ export default async function Dashboard() {
 
           <ul className="space-y-4">
             {user.boards.map((board) => (
-              <li
-                key={board._id}
-                className="p-6 rounded-3xl bg-base-100 hover:bg-base-300 transition-colors cursor-pointer"
-              >
-                {board.name}
+              <li key={board._id}>
+                <Link
+                  href={`dashboard/b/${board._id}`}
+                  className="block p-6 rounded-3xl bg-base-100 transition-colors cursor-pointer hover:bg-neutral hover:text-neutral-content duration-200"
+                >
+                  {board.name}
+                </Link>
               </li>
             ))}
           </ul>
