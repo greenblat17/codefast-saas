@@ -1,7 +1,6 @@
 import Link from "next/link";
 import ButtonLogout from "@/components/ButtonLogout";
 import FormNewBoard from "@/components/FormNewBoard";
-import CardBoardLink from "@/components/CardBoardLink";
 import { auth } from "@/auth";
 import User from "@/models/User";
 import connectMongo from "@/libs/mongoose";
@@ -22,7 +21,7 @@ export default async function Dashboard() {
     <main className="bg-base-200 min-h-screen">
       {/* HEADER */}
       <section className="bg-base-100 px-5 py-3 max-w-5xl mx-auto flex justify-between">
-        <ButtonCheckout />
+        {!user.hasAccess && <ButtonCheckout />}
         <ButtonLogout />
       </section>
 
