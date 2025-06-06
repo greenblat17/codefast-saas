@@ -22,8 +22,9 @@ export async function POST(req) {
 
     const { data, type } = event;
 
-    // ✅ Grant access to the product
     if (type === "checkout.session.completed") {
+      // ✅ Grant access to the product
+
       await connectMongo();
 
       const user = await User.findById(data.object.client_reference_id);
@@ -34,6 +35,18 @@ export async function POST(req) {
       await user.save();
 
       return NextResponse.json({ message: "Access granted" });
+    } else if (type === "customer.subscription.deleted") {
+      // ❌ Revoke access to the product
+
+      await connectMongo();
+
+      const user = await User.findOne({ customerId: data.object.customer });
+
+      user.hasAccess = false;
+
+      await user.save();
+
+      return NextResponse.json({ message: "Access revoked" });
     }
 
     return NextResponse.json({ message: "Webhook received" });
