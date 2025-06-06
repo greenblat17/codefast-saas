@@ -1,30 +1,43 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import connectMongo from "@/libs/mongoose";
 import Board from "@/models/Board";
+import Post from "@/models/Post";
 import { auth } from "@/auth";
 import CardBoardLink from "@/components/CardBoardLink";
 import ButtonDeleteBoard from "@/components/ButtonDeleteBoard";
-const getBoard = async (boardId) => {
+import CardPostAdmin from "@/components/CardPostAdmin";
+
+const getData = async (boardId) => {
   const session = await auth();
 
   await connectMongo();
 
-  return await Board.findOne({
+  const board = await Board.findOne({
     _id: boardId,
     userId: session?.user?.id,
   });
+
+  if (!board) {
+    redirect("/dashboard");
+  }
+
+  const posts = await Post.find({ boardId });
+
+  return { board, posts };
 };
 
 export default async function FeedbackBoard(props) {
   const { boardId } = props.params;
 
-  const board = await getBoard(boardId);
+  const { board, posts } = await getData(boardId);
 
   return (
     <main className="bg-base-200 min-h-screen">
+      {/* HEADER */}
       <section className="bg-base-100">
-        <div className="max-w-5xl mx-auto px-5 py-3 flex justify-start">
-          <Link href="/dashboard" className="btn btn-primary">
+        <div className="max-w-5xl mx-auto px-5 py-3 flex">
+          <Link href="/dashboard" className="btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
@@ -42,12 +55,20 @@ export default async function FeedbackBoard(props) {
         </div>
       </section>
 
-      <section className="px-5 py-12 max-w-5xl mx-auto space-y-12">
-        <h1 className="font-extrabold text-xl mb-4">{board.name}</h1>
+      <section className="max-w-5xl mx-auto px-5 py-12 flex flex-col md:flex-row gap-12">
+        <div className="space-y-8">
+          <h1 className="font-extrabold text-xl mb-4">{board.name}</h1>
 
-        <CardBoardLink boardId={boardId.toString()} />
+          <CardBoardLink boardId={board._id.toString()} />
 
-        <ButtonDeleteBoard boardId={boardId.toString()} />
+          <ButtonDeleteBoard boardId={board._id.toString()} />
+        </div>
+
+        <ul className="space-y-4 flex-grow">
+          {posts.map((post) => (
+            <CardPostAdmin key={post._id} post={post} />
+          ))}
+        </ul>
       </section>
     </main>
   );
