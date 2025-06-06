@@ -24,6 +24,14 @@ export async function POST(req) {
     await connectMongo();
 
     const user = await User.findById(session.user.id);
+
+    if (!user.hasAccess) {
+      return NextResponse.json(
+        { message: "You need to subscribe to create boards" },
+        { status: 403 }
+      );
+    }
+
     const board = await Board.create({
       name: body.name,
       userId: user._id,
@@ -54,12 +62,19 @@ export async function DELETE(req) {
 
     await connectMongo();
 
+    const user = await User.findById(session.user.id);
+
+    if (!user.hasAccess) {
+      return NextResponse.json(
+        { message: "You need to subscribe to create boards" },
+        { status: 403 }
+      );
+    }
+
     await Board.deleteOne({
       _id: boardId,
       userId: session.user.id,
     });
-
-    const user = await User.findById(session.user.id);
 
     user.boards = user.boards.filter((id) => id.toString() !== boardId);
     await user.save();
