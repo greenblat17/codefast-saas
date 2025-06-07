@@ -7,12 +7,10 @@ import Post from "@/models/Post";
 import CardPost from "@/components/CardPost";
 
 const getData = async (boardId) => {
-  const session = await auth();
-
   await connectMongo();
 
   const board = await Board.findById(boardId);
-  const posts = await Post.find({ boardId }).sort({ createdAt: -1 });
+  const posts = await Post.find({ boardId }).sort({ votesCounter: -1 });
 
   if (!board) {
     redirect("/");
